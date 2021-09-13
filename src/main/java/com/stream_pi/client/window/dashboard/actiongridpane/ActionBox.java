@@ -28,6 +28,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
+import animatefx.animation.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedList;
@@ -220,6 +221,14 @@ public class ActionBox extends StackPane
                     getActionGridPaneListener().toggleActionClicked(action.getID(), getCurrentToggleStatus());
                 }
             }
+            try
+            {
+                playActionAnimation();
+            }
+            catch (SevereException ex)
+            {
+                exceptionAndAlertHandler.handleSevereException(ex);
+            }
         }
     }
 
@@ -305,6 +314,61 @@ public class ActionBox extends StackPane
     public void setAction(Action action)
     {
         this.action = action;
+    }
+
+    public void playActionAnimation() throws SevereException {
+        Config config = Config.getInstance();
+        
+        switch (config.getCurrentAnimationName()) {
+        case "None":
+            return;
+        case "Flip":
+            new Flip(getChildren().get(1).getParent()).play();
+        case "Bounce":
+            new Bounce(getChildren().get(1).getParent()).play();
+            break;
+        case "Bounce InOut":
+            new BounceOut(getChildren().get(1).getParent()).playOnFinished(new BounceIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Fade InOut":
+            new FadeOut(getChildren().get(1).getParent()).playOnFinished(new FadeIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Roll InOut":
+            new RollOut(getChildren().get(1).getParent()).playOnFinished(new RollIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Rotate InOut":
+            new RotateOut(getChildren().get(1).getParent()).playOnFinished(new RotateIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Zoom InOut":
+            new ZoomOut(getChildren().get(1).getParent()).playOnFinished(new ZoomIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Jack In The Box":
+            new JackInTheBox(getChildren().get(1).getParent()).play();
+            break;
+        case "Swing UpDown":
+            new Swing(getChildren().get(1).getParent()).play();
+            break;
+        case "Jello":
+            new Jello(getChildren().get(1).getParent()).play();
+            break;
+        case "Pulse":
+            new Pulse(getChildren().get(1).getParent()).play();
+            break;
+        case "RubberBand":
+            new RubberBand(getChildren().get(1).getParent()).play();
+            break;
+        case "Shake LeftRight":
+            new Shake(getChildren().get(1).getParent()).play();
+            break;
+        case "Tada":
+            new Tada(getChildren().get(1).getParent()).play();
+            break;
+        case "Wobble":
+            new Wobble(getChildren().get(1).getParent()).play();
+            break;
+        default:
+            Logger.getLogger("").warning("Invalid Option/n Please contact quimodotcom to solve this error!");
+        }
     }
 
     public void init()
