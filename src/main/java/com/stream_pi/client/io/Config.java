@@ -154,7 +154,7 @@ public class Config
 
     public String getCurrentAnimationName()
     {
-        return XMLConfigHelper.getStringProperty(document, "current-animation-name", getDefaultCurrentThemeFullName(), false, true, document, configFile);
+        return XMLConfigHelper.getStringProperty(document, "current-animation-name", getDefaultCurrentAnimationName(), false, true, document, configFile);
     }
 
     public String getThemesPath()

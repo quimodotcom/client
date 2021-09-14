@@ -220,14 +220,14 @@ public class ActionBox extends StackPane
                     toggle();
                     getActionGridPaneListener().toggleActionClicked(action.getID(), getCurrentToggleStatus());
                 }
-            }
-            try
-            {
-                playActionAnimation();
-            }
-            catch (SevereException ex)
-            {
-                exceptionAndAlertHandler.handleSevereException(ex);
+                try
+                {
+                    playActionAnimation();
+                }
+                    catch (SevereException ex)
+                {
+                    exceptionAndAlertHandler.handleSevereException(ex);
+                }
             }
         }
     }

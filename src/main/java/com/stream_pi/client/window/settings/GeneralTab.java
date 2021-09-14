@@ -36,7 +36,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.net.URISyntaxException;
@@ -497,12 +497,14 @@ public class GeneralTab extends VBox
                 break;
             }
         }
-
-        List<String> animationList = Arrays.asList();
+        
+        List<String> animationList = new ArrayList<String>();
         for(int i = 0;i<AnimateNames.values().length;i++)
         {
             animationList.add(AnimateNames.values()[i].name().replace("_", " "));
         }
+        
+        animationComboBox.setOptions(animationList);
 
         int ind3 = 0;
         for(int i = 0;i<animationComboBox.getOptions().size();i++)
@@ -513,8 +515,6 @@ public class GeneralTab extends VBox
                 break;
             }
         }
-        
-        animationComboBox.setOptions(animationList);
 
         themeComboBox.setCurrentSelectedItemIndex(ind2);
         animationComboBox.setCurrentSelectedItemIndex(ind3);
