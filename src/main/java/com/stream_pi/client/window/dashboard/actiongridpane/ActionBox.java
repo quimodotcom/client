@@ -318,6 +318,9 @@ public class ActionBox extends StackPane
     }
 
     public void playActionAnimation() throws SevereException {
+        
+        System.out.println(action.getActionAnimation().getUIName());
+        
         switch (action.getActionAnimation().getUIName()) {
         case "None":
             return;
