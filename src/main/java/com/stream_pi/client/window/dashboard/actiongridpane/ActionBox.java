@@ -3,6 +3,7 @@ package com.stream_pi.client.window.dashboard.actiongridpane;
 import com.stream_pi.action_api.action.Action;
 import com.stream_pi.action_api.action.ActionType;
 import com.stream_pi.action_api.action.DisplayTextAlignment;
+import com.stream_pi.action_api.action.AnimationNames;
 import com.stream_pi.client.controller.ClientListener;
 import com.stream_pi.client.io.Config;
 import com.stream_pi.client.window.ExceptionAndAlertHandler;
@@ -317,9 +318,7 @@ public class ActionBox extends StackPane
     }
 
     public void playActionAnimation() throws SevereException {
-        Config config = Config.getInstance();
-        
-        switch (config.getCurrentAnimationName()) {
+        switch (action.getActionAnimation().getUIName()) {
         case "None":
             return;
         case "Flip":

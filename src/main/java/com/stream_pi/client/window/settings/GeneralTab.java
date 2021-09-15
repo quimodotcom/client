@@ -55,7 +55,6 @@ public class GeneralTab extends VBox
 
     private StreamPiComboBox<ClientProfile> clientProfileComboBox;
     private StreamPiComboBox<Theme> themeComboBox;
-    private StreamPiComboBox<String> animationComboBox;
 
     private TextField nickNameTextField;
 
@@ -146,16 +145,6 @@ public class GeneralTab extends VBox
             public String getOptionDisplayText(Theme object)
             {
                 return object.getShortName();
-            }
-        });
-
-        animationComboBox = new StreamPiComboBox<>();
-        animationComboBox.setStreamPiComboBoxFactory(new StreamPiComboBoxFactory<String>()
-        {
-            @Override
-            public String getOptionDisplayText(String object)
-            {
-                return object;
             }
         });
 
@@ -255,11 +244,6 @@ public class GeneralTab extends VBox
                         new Label("Theme"),
                         SpaceFiller.horizontal(),
                         themeComboBox
-                ),
-                new HBox(
-                        new Label("Action Animation"),
-                        SpaceFiller.horizontal(),
-                        animationComboBox
                 ),
                 generateSubHeading("Others"),
                 themesPathInputBox,
@@ -497,27 +481,8 @@ public class GeneralTab extends VBox
                 break;
             }
         }
-        
-        List<String> animationList = new ArrayList<String>();
-        for(int i = 0;i<AnimateNames.values().length;i++)
-        {
-            animationList.add(AnimateNames.values()[i].name().replace("_", " "));
-        }
-        
-        animationComboBox.setOptions(animationList);
-
-        int ind3 = 0;
-        for(int i = 0;i<animationComboBox.getOptions().size();i++)
-        {
-            if(animationComboBox.getOptions().get(i).equals(config.getCurrentAnimationName()))
-            {
-                ind3 = i;
-                break;
-            }
-        }
 
         themeComboBox.setCurrentSelectedItemIndex(ind2);
-        animationComboBox.setCurrentSelectedItemIndex(ind3);
 
         themesPathTextField.setText(config.getThemesPath());
         iconsPathTextField.setText(config.getIconsPath());
@@ -620,13 +585,6 @@ public class GeneralTab extends VBox
                 {
                     exceptionAndAlertHandler.handleSevereException(e);
                 }
-            }
-
-            if(!config.getCurrentAnimationName().equals(animationComboBox.getCurrentSelectedItem()))
-            {
-                syncWithServer = true;
-                
-                config.setCurrentAnimationName(animationComboBox.getCurrentSelectedItem());
             }
 
             if(!config.getClientNickName().equals(nickNameTextField.getText()))
@@ -782,25 +740,6 @@ public class GeneralTab extends VBox
             e.printStackTrace();
             exceptionAndAlertHandler.handleMinorException(e);
         }
-    }
-    public enum AnimateNames {
-        None,
-        Bounce,
-        Bounce_InOut,
-        Fade_InOut,
-        Flash,
-        Flip,
-        Jack_In_The_Box, 
-        Jello,
-        Pulse,
-        Roll_InOut, 
-        Rotate_InOut,
-        RubberBand,
-        Shake_LeftRight,
-        Swing,
-        Tada,
-        Wobble,
-        Zoom_InOut
     }
     
 
