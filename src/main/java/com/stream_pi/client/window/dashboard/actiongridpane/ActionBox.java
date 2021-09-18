@@ -3,6 +3,7 @@ package com.stream_pi.client.window.dashboard.actiongridpane;
 import com.stream_pi.action_api.action.Action;
 import com.stream_pi.action_api.action.ActionType;
 import com.stream_pi.action_api.action.DisplayTextAlignment;
+import com.stream_pi.action_api.action.Animation;
 import com.stream_pi.client.controller.ClientListener;
 import com.stream_pi.client.io.Config;
 import com.stream_pi.client.window.ExceptionAndAlertHandler;
@@ -13,6 +14,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
 import javafx.scene.control.Label;
@@ -27,10 +29,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
+import animatefx.animation.*;
 
 import animatefx.animation.*;
 
 import java.io.ByteArrayInputStream;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 public class ActionBox extends StackPane
@@ -165,14 +169,67 @@ public class ActionBox extends StackPane
                     }
                 }
 
-                if(action.getActionType() == ActionType.COMBINE || action.getActionType() == ActionType.NORMAL)
+                if(action.getActionType() == ActionType.NORMAL)
                 {
-                    getActionGridPaneListener().normalOrCombineActionClicked(action.getID());
+                    getActionGridPaneListener().normalActionClicked(action.getID());
+                }
+                else if(action.getActionType() == ActionType.COMBINE)
+                {
+
+                    System.out.println("TOTAL CHILDREN : "+action.getClientProperties().getSize());
+
+                    new Thread(new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception
+                        {
+                            for(int i = 0;i<action.getClientProperties().getSize(); i++)
+                            {
+                                try
+                                {
+                                    Action childAction = clientListener.getCurrentProfile().getActionFromID(
+                                            action.getClientProperties().getSingleProperty(i+"").getRawValue()
+                                    );
+
+                                    System.out.println("TYPE : "+childAction.getActionType());
+
+                                    Thread.sleep(childAction.getDelayBeforeExecuting());
+
+                                    if (childAction.getActionType() == ActionType.NORMAL)
+                                    {
+                                        getActionGridPaneListener().normalActionClicked(childAction.getID());
+                                    }
+                                    else if (childAction.getActionType() == ActionType.TOGGLE)
+                                    {
+                                        clientListener.getCurrentProfile().getActionFromID(childAction.getID()).setCurrentToggleStatus(
+                                                !clientListener.getCurrentProfile().getActionFromID(childAction.getID()).getCurrentToggleStatus()
+                                        );
+
+                                        getActionGridPaneListener().toggleActionClicked(childAction.getID(), childAction.getCurrentToggleStatus());
+                                    }
+                                }
+                                catch (MinorException e)
+                                {
+                                    exceptionAndAlertHandler.handleMinorException(e);
+                                }
+                            }
+
+                            return null;
+                        }
+                    }).start();
+
                 }
                 else if(action.getActionType() == ActionType.TOGGLE)
                 {
                     toggle();
                     getActionGridPaneListener().toggleActionClicked(action.getID(), getCurrentToggleStatus());
+                }
+                try
+                {
+                    playActionAnimation();
+                }
+                    catch (SevereException ex)
+                {
+                    exceptionAndAlertHandler.handleSevereException(ex);
                 }
             }
             try {
@@ -294,6 +351,62 @@ public class ActionBox extends StackPane
             (new Wobble(getChildren().get(1))).play();
         } 
         Logger.getLogger("").warning("Invalid Option/n Please contact quimodotcom to solve this error!");
+    }
+
+    public void playActionAnimation() throws SevereException {
+        
+        System.out.println(action.getActionAnimation().getUIName());
+        
+        switch (action.getActionAnimation().getUIName()) {
+        case "None":
+            return;
+        case "Flip":
+            new Flip(getChildren().get(1).getParent()).play();
+        case "Bounce":
+            new Bounce(getChildren().get(1).getParent()).play();
+            break;
+        case "Bounce InOut":
+            new BounceOut(getChildren().get(1).getParent()).playOnFinished(new BounceIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Fade InOut":
+            new FadeOut(getChildren().get(1).getParent()).playOnFinished(new FadeIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Roll InOut":
+            new RollOut(getChildren().get(1).getParent()).playOnFinished(new RollIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Rotate InOut":
+            new RotateOut(getChildren().get(1).getParent()).playOnFinished(new RotateIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Zoom InOut":
+            new ZoomOut(getChildren().get(1).getParent()).playOnFinished(new ZoomIn(getChildren().get(1).getParent())).play();
+            break;
+        case "Jack In The Box":
+            new JackInTheBox(getChildren().get(1).getParent()).play();
+            break;
+        case "Swing UpDown":
+            new Swing(getChildren().get(1).getParent()).play();
+            break;
+        case "Jello":
+            new Jello(getChildren().get(1).getParent()).play();
+            break;
+        case "Pulse":
+            new Pulse(getChildren().get(1).getParent()).play();
+            break;
+        case "RubberBand":
+            new RubberBand(getChildren().get(1).getParent()).play();
+            break;
+        case "Shake LeftRight":
+            new Shake(getChildren().get(1).getParent()).play();
+            break;
+        case "Tada":
+            new Tada(getChildren().get(1).getParent()).play();
+            break;
+        case "Wobble":
+            new Wobble(getChildren().get(1).getParent()).play();
+            break;
+        default:
+            Logger.getLogger("").warning("Invalid Option/n Please contact quimodotcom to solve this error!");
+        }
     }
 
     public void init()

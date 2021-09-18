@@ -18,6 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import com.stream_pi.action_api.action.Action;
 import com.stream_pi.action_api.action.ActionType;
 import com.stream_pi.action_api.action.DisplayTextAlignment;
+import com.stream_pi.action_api.action.Animation;
 import com.stream_pi.action_api.action.Location;
 import com.stream_pi.action_api.actionproperty.ClientProperties;
 import com.stream_pi.action_api.actionproperty.property.Property;
@@ -261,9 +262,11 @@ public class ClientProfile implements Cloneable{
                 boolean showText = XMLConfigHelper.getBooleanProperty(textElement, "show");
                 String displayTextFontColour = XMLConfigHelper.getStringProperty(textElement, "colour-hex");
                 DisplayTextAlignment displayTextAlignment = DisplayTextAlignment.valueOf(XMLConfigHelper.getStringProperty(textElement, "alignment"));
+                Animation actionAnimation = Animation.valueOf(XMLConfigHelper.getStringProperty(textElement, "action-animation"));
 
-
+                
                 action.setDisplayTextAlignment(displayTextAlignment);
+                action.setActionAnimation(actionAnimation);
                 action.setShowDisplayText(showText);
 
                 action.setDisplayTextFontColourHex(displayTextFontColour);
@@ -466,8 +469,12 @@ public class ClientProfile implements Cloneable{
         Element textAlignmentElement = document.createElement("alignment");
         textAlignmentElement.setTextContent(action.getDisplayTextAlignment()+"");
         textElement.appendChild(textAlignmentElement);
+        
+        Element animationElement = document.createElement("action-animation");
+        animationElement.setTextContent(action.getActionAnimation()+"");
+        textElement.appendChild(animationElement);
 
-
+        
         Element locationElement = document.createElement("location");
         displayElement.appendChild(locationElement);
 

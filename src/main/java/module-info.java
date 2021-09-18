@@ -4,6 +4,7 @@ module com.stream_pi.client {
     requires javafx.controls;
     requires org.kordamp.iconli.core;
     requires org.kordamp.ikonli.javafx;
+    requires AnimateFX;
 
     requires com.gluonhq.attach.lifecycle;
     requires com.gluonhq.attach.util;
